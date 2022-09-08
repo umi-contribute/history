@@ -19,6 +19,16 @@ describe("createPath", () => {
     });
   });
 
+  describe("given a pathname and a query param", () => {
+    it("returns the constructed pathname", () => {
+      let path = createPath({
+        pathname: "https://google.com",
+        query: { something: "cool" },
+      });
+      expect(path).toBe("https://google.com?something=cool");
+    });
+  });
+
   describe("given a pathname and a search param without ?", () => {
     it("returns the constructed pathname", () => {
       let path = createPath({

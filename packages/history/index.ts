@@ -1,3 +1,5 @@
+import { parse, ParsedQuery, stringify } from "query-string";
+
 /**
  * Actions represent the type of change to a location value.
  *
@@ -42,6 +44,11 @@ export type Pathname = string;
 export type Search = string;
 
 /**
+ * The URL search object
+ */
+export type Query = ParsedQuery;
+
+/**
  * A URL fragment identifier, beginning with a #.
  *
  * @see https://github.com/remix-run/history/tree/main/docs/api-reference.md#location.hash
@@ -82,6 +89,11 @@ export interface Path {
    * @see https://github.com/remix-run/history/tree/main/docs/api-reference.md#location.search
    */
   search: Search;
+
+  /**
+   * The URL search object
+   */
+  query: Query;
 
   /**
    * A URL fragment identifier, beginning with a #.
@@ -370,11 +382,13 @@ export function createBrowserHistory(
   function getIndexAndLocation(): [number, Location] {
     let { pathname, search, hash } = window.location;
     let state = globalHistory.state || {};
+    let query = parse(search) || {};
     return [
       state.idx,
       readOnly<Location>({
         pathname,
         search,
+        query,
         hash,
         state: state.usr || null,
         key: state.key || "default",
@@ -449,6 +463,7 @@ export function createBrowserHistory(
       pathname: location.pathname,
       hash: "",
       search: "",
+      query: {},
       ...(typeof to === "string" ? parsePath(to) : to),
       state,
       key: createKey(),
@@ -601,6 +616,7 @@ export function createHashHistory(
       readOnly<Location>({
         pathname,
         search,
+        query: parse(search) || {},
         hash,
         state: state.usr || null,
         key: state.key || "default",
@@ -698,6 +714,7 @@ export function createHashHistory(
       pathname: location.pathname,
       hash: "",
       search: "",
+      query: {},
       ...(typeof to === "string" ? parsePath(to) : to),
       state,
       key: createKey(),
@@ -862,6 +879,7 @@ export function createMemoryHistory(
       pathname: "/",
       search: "",
       hash: "",
+      query: {},
       state: null,
       key: createKey(),
       ...(typeof entry === "string" ? parsePath(entry) : entry),
@@ -895,6 +913,7 @@ export function createMemoryHistory(
     return readOnly<Location>({
       pathname: location.pathname,
       search: "",
+      query: {},
       hash: "",
       ...(typeof to === "string" ? parsePath(to) : to),
       state,
@@ -1052,10 +1071,13 @@ function createKey() {
 export function createPath({
   pathname = "/",
   search = "",
+  query,
   hash = "",
 }: Partial<Path>) {
   if (search && search !== "?")
     pathname += search.charAt(0) === "?" ? search : "?" + search;
+  else if (query)
+    pathname += "?" + stringify(query);
   if (hash && hash !== "#")
     pathname += hash.charAt(0) === "#" ? hash : "#" + hash;
   return pathname;
@@ -1079,6 +1101,7 @@ export function parsePath(path: string): Partial<Path> {
     let searchIndex = path.indexOf("?");
     if (searchIndex >= 0) {
       parsedPath.search = path.substr(searchIndex);
+      parsedPath.query = parsedPath.query || parse(parsedPath.search || '') || {};
       path = path.substr(0, searchIndex);
     }
 

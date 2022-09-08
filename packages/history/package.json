@@ -3,7 +3,7 @@
   "version": "5.3.0",
   "description": "Manage session history with JavaScript",
   "author": "Remix Software <hello@remix.run>",
-  "repository": "remix-run/history",
+  "repository": "umi-contribute/history",
   "license": "MIT",
   "main": "main.js",
   "module": "index.js",
@@ -11,6 +11,7 @@
   "unpkg": "umd/history.production.min.js",
   "sideEffects": false,
   "dependencies": {
+    "query-string": "^6.13.6",
     "@babel/runtime": "^7.7.6"
   },
   "keywords": [

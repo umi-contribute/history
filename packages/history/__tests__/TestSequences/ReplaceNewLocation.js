@@ -28,7 +28,7 @@ export default (history, done) => {
       expect(action).toBe("REPLACE");
       expect(location).toMatchObject({
         pathname: "/",
-        // search: "",
+        search: "",
         state: null,
         key: expect.any(String),
       });

@@ -1076,8 +1076,11 @@ export function createPath({
 }: Partial<Path>) {
   if (search && search !== "?")
     pathname += search.charAt(0) === "?" ? search : "?" + search;
-  else if (query)
-    pathname += "?" + stringify(query);
+  else if (query) {
+    const queryString = stringify(query);
+    if (queryString)
+      pathname += "?" + queryString;
+  }
   if (hash && hash !== "#")
     pathname += hash.charAt(0) === "#" ? hash : "#" + hash;
   return pathname;

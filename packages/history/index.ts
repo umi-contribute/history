@@ -267,6 +267,16 @@ export interface History {
   back(): void;
 
   /**
+   * Navigates to the previous entry in the stack. Identical to go(-1).
+   *
+   * Warning: if the current location is the first location in the stack, this
+   * will unload the current document.
+   *
+   * @see https://github.com/umijs/umi/blob/27937cdfbcb6e604917cd1b288f726b4c4f4fe3d/docs/docs/api/api.md?plain=1#L801
+   */
+  goBack(): void;
+
+  /**
    * Navigates to the next entry in the stack. Identical to go(1).
    *
    * @see https://github.com/remix-run/history/tree/main/docs/api-reference.md#history.forward
@@ -555,6 +565,9 @@ export function createBrowserHistory(
     back() {
       go(-1);
     },
+    goBack() {
+      go(-1);
+    },
     forward() {
       go(1);
     },
@@ -820,6 +833,9 @@ export function createHashHistory(
     back() {
       go(-1);
     },
+    goBack() {
+      go(-1);
+    },
     forward() {
       go(1);
     },
@@ -1003,6 +1019,9 @@ export function createMemoryHistory(
     replace,
     go,
     back() {
+      go(-1);
+    },
+    goBack() {
       go(-1);
     },
     forward() {
